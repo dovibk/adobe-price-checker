@@ -18,3 +18,4 @@ jobs:
       - name: Run price checker
         run: |
           python price_checker.py
+# reload
