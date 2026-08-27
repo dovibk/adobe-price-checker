@@ -1,0 +1,30 @@
+name: Daily Adobe Price Check
+
+on:
+  schedule:
+    # מריץ 4 פעמים ביום (כל 6 שעות)
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # מאפשר הרצה ידנית בלחיצת כפתור
+
+jobs:
+  check-price:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run price check script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python adobe_tracker.py
